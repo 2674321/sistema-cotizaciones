@@ -1,0 +1,36 @@
+{
+  "prestador": {
+    "nombre": "Patricio Varela C.",
+    "titulo": "Técnico en Programación Nivel Medio",
+    "email": "patriciovarelacontreras@gmail.com",
+    "telefono": "",
+    "sitio_web": "",
+    "git": "",
+    "github_url": "https://github.com/2674321",
+    "orcid_id": "",
+    "logo_url": ""
+  },
+  "documento": {
+    "tipo": "COTIZACIÓN DE SERVICIOS PROFESIONALES",
+    "prefijo_codigo": "COT",
+    "patron_codigo": "{PREFIJO}-{CLAVE}-{ANIO}-{SEQ}",
+    "secuencia_digitos": 3,
+    "moneda": "CLP",
+    "vigencia_dias_default": 15,
+    "pie_documento": "Documento generado electrónicamente por Patricio Varela C. — {CODIGO} · v{VERSION} · Verif. {HASH}",
+    "plantilla_version": 2
+  },
+  "git": {
+    "modo": "privado",
+    "modos_posibles": [
+      "privado",
+      "compartido",
+      "publico"
+    ]
+  },
+  "verificacion": {
+    "qr_activo": true,
+    "qr_base_url": "",
+    "hash_sal": "CAMBIA-ESTA-SAL — pon tu sal real en datos/privado/secreto.json"
+  }
+}

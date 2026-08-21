@@ -1,0 +1,26 @@
+# ── Documento de referencia (NO versionar: contiene datos de clientes) ──
+*.docx
+*.doc
+
+# ── Credenciales y configuración local de despliegue ──
+.clasp.json
+.clasprc.json
+credentials*.json
+token*.json
+client_secret*.json
+.env
+
+# ── Datos privados en uso (clientes reales, sal real) ──
+datos/privado/
+
+# ── Salidas: TODO preview/ es local; solo los archivos DEMO se publican ──
+preview/*
+!preview/*DEMO*
+
+# ── Sistema / temporales ──
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+~$*
+node_modules/

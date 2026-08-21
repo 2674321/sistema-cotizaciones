@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>COT-DEMO-2026-001 — Tienda Online con Panel de Administración</title>
+<style>
+  /* ══════════════════════════════════════════════════════════
+     Sistema de Cotizaciones — Plantilla visual v2
+     Novedades: links clicables · QR de verificación · control
+     de documento · garantías · desglose justificado de valores
+     Paleta: primario #0B3954 · acento #087E8B · texto #1F2937
+     ══════════════════════════════════════════════════════════ */
+  @page {
+    size: A4;
+    margin: 16mm 14mm 18mm 14mm;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.55;
+    color: #1F2937;
+  }
+  .doc { max-width: 182mm; }
+  a { color: #087E8B; text-decoration: none; border-bottom: .5px solid #9CCFD4; }
+
+  /* ── Encabezado / banda de identidad ── */
+  table.band { width: 100%; border-collapse: collapse; background: #0B3954; }
+  table.band td { padding: 9mm 8mm 8mm 8mm; vertical-align: middle; }
+  td.band-left { width: 62%; border-right: 2px solid rgba(255,255,255,.25); }
+  td.band-right { width: 38%; text-align: right; }
+  .prestador-nombre { color: #FFFFFF; font-size: 15.5pt; font-weight: 700; letter-spacing: .3px; }
+  .prestador-titulo { color: #BFD7E4; font-size: 8.6pt; text-transform: uppercase; letter-spacing: 1.6px; margin-top: 1.5mm; }
+  .doc-tipo { color: #8FD6DE; font-size: 8.4pt; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
+  .chip-codigo {
+    display: inline-block; margin-top: 2.5mm; padding: 1.4mm 3.5mm;
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.35);
+    color: #FFFFFF; font-size: 10.5pt; font-weight: 700; letter-spacing: .8px; border-radius: 2mm;
+  }
+  .band-version { color: #BFD7E4; font-size: 8.4pt; margin-top: 1.6mm; }
+
+  /* ── Franja de contacto con links ── */
+  .contacto {
+    width: 100%; border-collapse: collapse; background: #F2F6F9;
+    border-bottom: 2px solid #087E8B;
+  }
+  .contacto td { padding: 2.6mm 4mm; font-size: 8.8pt; color: #33475C; }
+  .contacto a { color: #086274; font-weight: 600; }
+  .contacto .etq { color: #087E8B; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; font-size: 7.6pt; padding-right: 1.5mm; }
+  .contacto .sep { color: #C4D2DD; padding: 0 2mm; }
+
+  /* ── Portada compacta (hero) ── */
+  .hero { padding: 9mm 2mm 7mm 2mm; border-bottom: 1px solid #DCE5EC; }
+  .hero-kicker { color: #087E8B; font-size: 8.8pt; font-weight: 700; text-transform: uppercase; letter-spacing: 2.2px; margin-bottom: 2.5mm; }
+  .hero h1 { color: #0B3954; font-size: 22pt; line-height: 1.2; font-weight: 800; letter-spacing: -.3px; }
+  .hero-meta { margin-top: 3.5mm; color: #5B6B7C; font-size: 9.2pt; }
+  .hero-meta b { color: #0B3954; }
+
+  /* ── Secciones ── */
+  section { margin-top: 8mm; page-break-inside: avoid; }
+  section.salta { page-break-before: always; margin-top: 0; padding-top: 2mm; }
+  h2.sec {
+    color: #0B3954; font-size: 12.5pt; font-weight: 800; letter-spacing: .2px;
+    padding-bottom: 1.8mm; margin-bottom: 3.5mm; border-bottom: 2px solid #E4EBF1;
+  }
+  h2.sec .num {
+    display: inline-block; min-width: 7.5mm; padding: .4mm 0; margin-right: 2.5mm;
+    background: #087E8B; color: #FFF; font-size: 9.5pt; text-align: center;
+    border-radius: 1.2mm; vertical-align: 1px;
+  }
+  h3.sub { color: #087E8B; font-size: 10.5pt; font-weight: 700; margin: 3.2mm 0 1mm 0; }
+  p { margin-bottom: 2.2mm; text-align: justify; }
+  ul.lista { list-style: none; margin: 1mm 0 2mm 0; }
+  ul.lista li { padding-left: 5.5mm; position: relative; margin-bottom: 1.3mm; }
+  ul.lista li:before {
+    content: ""; position: absolute; left: .8mm; top: 2.05mm;
+    width: 2.1mm; height: 2.1mm; border-radius: 50%; background: #087E8B;
+  }
+  .nota {
+    background: #F2F6F9; border-left: 3px solid #087E8B;
+    padding: 2.4mm 3.5mm; color: #33475C; font-size: 9.3pt; margin: 2mm 0;
+    border-radius: 0 1.5mm 1.5mm 0;
+  }
+  .nota p { margin: 0; text-align: left; }
+
+  /* ── Tablas de información ── */
+  table.info { width: 100%; border-collapse: collapse; }
+  table.info td { border: 1px solid #DCE5EC; padding: 2.2mm 3.2mm; vertical-align: top; font-size: 9.4pt; }
+  table.info td.k { width: 30%; background: #F2F6F9; color: #33475C; font-weight: 700; }
+  table.info td.v { color: #1F2937; }
+  .vacio { color: #9AAABB; }
+
+  /* ── Tabla de ítems ── */
+  table.items { width: 100%; border-collapse: collapse; margin-top: 2mm; }
+  table.items th {
+    background: #0B3954; color: #FFF; font-size: 8.6pt; text-transform: uppercase;
+    letter-spacing: .8px; padding: 2.6mm 3mm; text-align: left; font-weight: 700;
+  }
+  table.items td { border: 1px solid #DCE5EC; padding: 2.6mm 3mm; font-size: 9.4pt; vertical-align: top; }
+  table.items tr:nth-child(even) td { background: #F7FAFC; }
+  td.num, th.num { text-align: right; white-space: nowrap; }
+  td.centro { text-align: center; white-space: nowrap; }
+  .item-detalle { color: #5B6B7C; font-size: 8.7pt; margin-top: .8mm; }
+  .item-cat { display: inline-block; color: #087E8B; font-weight: 700; font-size: 7.8pt; text-transform: uppercase; letter-spacing: .8px; }
+  .chip-incluido {
+    display: inline-block; background: #EAF5F6; border: 1px solid #BFE0E3; color: #0B5A63;
+    font-size: 8pt; font-weight: 800; letter-spacing: .8px; padding: .6mm 2.4mm; border-radius: 1mm;
+  }
+
+  /* ── Bloque de inversión destacado ── */
+  table.inversion { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 3mm;
+    background: linear-gradient(105deg, #0B3954 0%, #14608A 62%, #087E8B 100%); border-radius: 2.5mm; }
+  table.inversion td { padding: 6mm 7mm; vertical-align: middle; }
+  .inv-etq { color: #BFD7E4; font-size: 8.6pt; text-transform: uppercase; letter-spacing: 1.8px; font-weight: 700; }
+  .inv-proyecto { color: #FFFFFF; font-size: 12.5pt; font-weight: 700; margin-top: 1.2mm; }
+  .inv-total { color: #FFFFFF; font-size: 24pt; font-weight: 800; text-align: right; white-space: nowrap; letter-spacing: .5px; }
+  .inv-total small { display: block; font-size: 8.4pt; font-weight: 600; color: #8FD6DE; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 1mm; }
+  .soporte-chip {
+    width: 100%; border-collapse: collapse; margin-top: 2.5mm;
+    background: #EAF5F6; border: 1px solid #BFE0E3; border-radius: 1.8mm;
+  }
+  .soporte-chip td { padding: 3mm 4mm; font-size: 9.6pt; color: #0B5A63; }
+  .soporte-chip b { color: #087E8B; }
+
+  /* ── Desglose justificado (v2) ── */
+  table.desglose { width: 100%; border-collapse: separate; border-spacing: 0 2.2mm; margin-top: 1mm; }
+  table.desglose td { vertical-align: top; }
+  td.des-num { width: 8mm; }
+  .des-caja { border: 1px solid #DCE5EC; border-left: 3px solid #087E8B; border-radius: 0 2mm 2mm 0; padding: 3mm 4mm; background: #FBFDFE; }
+  .des-titulo { font-weight: 800; color: #0B3954; font-size: 10pt; }
+  .des-monto { float: right; color: #087E8B; font-weight: 800; font-size: 10.5pt; }
+  .des-detalle { color: #33475C; font-size: 8.9pt; margin-top: 1mm; }
+  .des-just { color: #5B6B7C; font-size: 8.7pt; margin-top: 1.2mm; text-align: justify; }
+  .des-just b { color: #33475C; }
+
+  /* ── Incluido vs No incluido ── */
+  table.doble { width: 100%; border-collapse: collapse; margin-top: 2.5mm; }
+  table.doble th { width: 50%; padding: 2.2mm 3.5mm; font-size: 9pt; text-transform: uppercase; letter-spacing: 1px; text-align: left; }
+  th.col-si { background: #0E7C86; color: #FFF; border-right: 1px solid #FFF; }
+  th.col-no { background: #5B6B7C; color: #FFF; }
+  table.doble td { border: 1px solid #DCE5EC; padding: 3mm 3.5mm; vertical-align: top; font-size: 9.2pt; width: 50%; }
+  td.col-si-cell { background: #F3FAFA; border-right: none; }
+  td.col-no-cell { background: #F8F9FB; }
+  ul.lista.compacta li { margin-bottom: 1.6mm; }
+
+  /* ── Verificación / QR (v2) ── */
+  table.verif { width: 100%; border-collapse: collapse; margin-top: 2.5mm; }
+  table.verif td { vertical-align: top; }
+  td.verif-txt { padding-right: 5mm; }
+  td.verif-qr { width: 34mm; text-align: center; }
+  .qr-img { width: 32mm; height: 32mm; border: 1px solid #DCE5EC; border-radius: 1.5mm; padding: 1.2mm; background: #FFF; }
+  .qr-pie { font-size: 7.4pt; color: #8296A8; margin-top: 1mm; letter-spacing: .3px; }
+  table.control { width: 100%; border-collapse: collapse; margin-top: 3mm; }
+  table.control th { background: #EDF3F7; color: #33475C; font-size: 7.6pt; text-transform: uppercase; letter-spacing: .8px; padding: 1.8mm 2.5mm; text-align: left; border: 1px solid #DCE5EC; }
+  table.control td { border: 1px solid #DCE5EC; padding: 1.8mm 2.5mm; font-size: 8.8pt; font-family: "Consolas", "DejaVu Sans Mono", monospace; color: #0B3954; font-weight: 600; }
+
+  /* ── Firma ── */
+  table.firmas { width: 100%; border-collapse: collapse; margin-top: 10mm; page-break-inside: avoid; }
+  table.firmas td { width: 46%; vertical-align: bottom; padding: 0 3mm; }
+  table.firmas td.firma-sep { width: 8%; }
+  .linea-firma { border-top: 1px solid #33475C; margin-top: 14mm; padding-top: 1.8mm; font-size: 8.8pt; color: #33475C; }
+  .aceptacion-datos { margin: 3mm 0 0 0; }
+  .aceptacion-datos td { border: 1px solid #DCE5EC; padding: 2.2mm 3.2mm; font-size: 9.4pt; }
+  .aceptacion-datos td.k { width: 26%; background: #F2F6F9; font-weight: 700; color: #33475C; }
+
+  /* ── Pie ── */
+  .pie {
+    margin-top: 10mm; padding-top: 2.6mm; border-top: 1px solid #DCE5EC;
+    color: #8296A8; font-size: 8pt; text-align: center;
+  }
+  .pie a { color: #6B93A8; border-bottom: none; }
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <!-- ══ ENCABEZADO DE IDENTIDAD ══ -->
+  <table class="band" cellpadding="0" cellspacing="0">
+    <tr>
+      <td class="band-left">
+        <div class="prestador-nombre">Patricio Varela C.</div>
+        <div class="prestador-titulo">Técnico en Programación Nivel Medio</div>
+      </td>
+      <td class="band-right">
+        <div class="doc-tipo">COTIZACIÓN DE SERVICIOS PROFESIONALES</div>
+        <div><span class="chip-codigo">COT-DEMO-2026-001</span></div>
+        <div class="band-version">Versión 2 · 21-08-2026</div>
+      </td>
+    </tr>
+  </table>
+  <table class="contacto" cellpadding="0" cellspacing="0">
+    <tr>
+      <td><span class="etq">Correo</span><a href="mailto:patriciovarelacontreras@gmail.com">patriciovarelacontreras@gmail.com</a><span class="sep">|</span><span class="etq">GitHub</span><a href="https://github.com/2674321">https://github.com/2674321</a></td>
+    </tr>
+  </table>
+
+  <!-- ══ PORTADA COMPACTA ══ -->
+  <div class="hero">
+    <div class="hero-kicker">Propuesta de desarrollo de software</div>
+    <h1>Tienda Online con Panel de Administración</h1>
+    <div class="hero-meta">
+      <b>Cliente:</b> Empresa de Ejemplo SpA &nbsp;&nbsp;·&nbsp;&nbsp; <b>Fecha de emisión:</b> 21 de agosto de 2026 &nbsp;&nbsp;·&nbsp;&nbsp; <b>Vigencia:</b> 15 días
+    </div>
+  </div>
+
+  <!-- ══ 1 · INFORMACIÓN DEL CLIENTE ══ -->
+  <section>
+    <h2 class="sec"><span class="num">1</span>Información del cliente</h2>
+    <table class="info">
+      <tr><td class="k">Cliente / Institución</td><td class="v">Empresa de Ejemplo SpA</td></tr>
+<tr><td class="k">Responsable</td><td class="v">María Pérez Soto</td></tr>
+<tr><td class="k">Cargo</td><td class="v">Gerenta General</td></tr>
+<tr><td class="k">Correo</td><td class="v">contacto@ejemplo.cl</td></tr>
+<tr><td class="k">Teléfono</td><td class="v">+56 9 1234 5678</td></tr>
+<tr><td class="k">Observaciones</td><td class="v">CLIENTE FICTICIO — solo para pruebas del sistema y capturas de pantalla.</td></tr>
+    </table>
+  </section>
+
+  <!-- ══ 2 · RESUMEN EJECUTIVO ══ -->
+  <section>
+    <h2 class="sec"><span class="num">2</span>Resumen ejecutivo</h2>
+    <p>La empresa vende sus productos de forma presencial y por redes sociales, sin un canal propio de ventas online. Los pedidos se coordinan por mensajes, lo que genera demoras en las respuestas, errores en el registro y falta de control sobre el inventario.</p>
+<p>Se propone el desarrollo de una tienda online con panel de administración a medida: catálogo de productos con fotografías y precios, carrito de compras, registro de pedidos y un panel interno para administrar productos, stock, pedidos y clientes desde un solo lugar.</p>
+<p>Con esta solución, la empresa centraliza sus ventas online, reduce los errores de coordinación y gana control total sobre su operación comercial.</p>
+  </section>
+
+  <!-- ══ 3 · ALCANCE ══ -->
+  <section>
+    <h2 class="sec"><span class="num">3</span>Alcance del proyecto</h2>
+    <h3 class="sub">Diseño e identidad</h3>
+<p>Adaptación de la identidad visual de la empresa a la tienda online: portada, catálogo y fichas de producto con fotografías y descripciones.</p>
+<h3 class="sub">Tienda online</h3>
+<p>Catálogo de productos, carrito de compras, registro de pedidos y notificación automática de cada venta al correo de la empresa.</p>
+<h3 class="sub">Panel de administración</h3>
+<p>Gestión interna de productos, precios, stock, pedidos y clientes, con acceso restringido por usuario y contraseña.</p>
+<h3 class="sub">Capacitación</h3>
+<p>Dos sesiones de capacitación para el equipo en el uso de la tienda y del panel de administración.</p>
+<h3 class="sub">Puesta en marcha</h3>
+<p>Publicación de la tienda, configuración del dominio y acompañamiento durante las primeras ventas.</p>
+  </section>
+
+  <!-- ══ 4 · ENTREGABLES ══ -->
+  <section>
+    <h2 class="sec"><span class="num">4</span>Entregables incluidos</h2>
+    <ul class="lista compacta">
+<li>Tienda online publicada y funcional.</li>
+<li>Panel de administración con accesos configurados.</li>
+<li>Catálogo inicial cargado (hasta 50 productos).</li>
+<li>Notificaciones automáticas de pedidos.</li>
+<li>Dos sesiones de capacitación grabadas.</li>
+<li>Documentación de uso básica.</li>
+<li>Servicio técnico de 3 meses incluido.</li>
+</ul>
+  </section>
+
+  <!-- ══ 5 · GIT ══ -->
+  <section>
+    <h2 class="sec"><span class="num">5</span>Control de versiones y respaldo</h2>
+    <p>El código fuente del proyecto será mantenido en un repositorio Git personal del desarrollador, lo que asegura:</p>
+<ul class="lista">
+<li>Versionado del código fuente con historial de cambios.</li>
+<li>Respaldo permanente del proyecto mediante control de versiones.</li>
+<li>Gestión ordenada de futuras modificaciones.</li>
+</ul>
+<div class="nota"><p>Modo de repositorio: privado. La eventual entrega de acceso al cliente deberá acordarse expresamente entre las partes.</p></div>
+  </section>
+
+  <!-- ══ 6 · SERVICIO TÉCNICO ══ -->
+  <section>
+    <h2 class="sec"><span class="num">6</span>Servicio técnico incluido — 3 meses</h2>
+    <p>Durante 3 meses contados desde la entrega del sistema, se incluye el servicio técnico relacionado directamente con el sistema entregado:</p>
+    <table class="doble" cellpadding="0" cellspacing="0">
+      <tr>
+        <th class="col-si">Incluido</th>
+        <th class="col-no">No incluido automáticamente</th>
+      </tr>
+      <tr>
+        <td class="col-si-cell"><ul class="lista compacta">
+<li>Corrección de errores del sistema.</li>
+<li>Asistencia ante fallos de funcionamiento.</li>
+<li>Ajustes menores dentro del alcance original.</li>
+<li>Orientación de uso del sistema.</li>
+<li>Revisión de problemas derivados del funcionamiento normal.</li>
+</ul></td>
+        <td class="col-no-cell"><ul class="lista compacta">
+<li>Nuevas funcionalidades mayores o nuevos módulos.</li>
+<li>Ampliaciones sustanciales del alcance.</li>
+<li>Sistemas o proyectos diferentes.</li>
+<li>Cambios radicales de arquitectura.</li>
+<li>Integraciones externas no contempladas.</li>
+</ul></td>
+      </tr>
+    </table>
+    <div class="nota"><p><p>Las ampliaciones señaladas como no incluidas podrán evaluarse y cotizarse por separado.</p></p></div>
+  </section>
+
+  <!-- ══ 7 · INVERSIÓN ══ -->
+  <section>
+    <h2 class="sec"><span class="num">7</span>Inversión</h2>
+    <table class="items">
+      <tr>
+        <th style="width:8mm;">#</th>
+        <th>Concepto</th>
+        <th class="centro" style="width:20mm;">Cant.</th>
+        <th class="num" style="width:34mm;">Valor (CLP)</th>
+      </tr>
+      <tr><td class="centro">1</td><td><span class="item-cat">Desarrollo web</span><br><b>Diseño y desarrollo de tienda online</b><div class="item-detalle">Portada, catálogo, fichas de producto, carrito de compras y registro de pedidos con notificación automática.</div></td><td class="centro">1 servicio</td><td class="num">$280.000</td></tr>
+<tr><td class="centro">2</td><td><span class="item-cat">Desarrollo web</span><br><b>Panel de administración</b><div class="item-detalle">Gestión de productos, precios, stock, pedidos y clientes, con accesos restringidos por usuario.</div></td><td class="centro">1 servicio</td><td class="num">$120.000</td></tr>
+<tr><td class="centro">3</td><td><span class="item-cat">Capacitación</span><br><b>Capacitación del equipo (2 sesiones)</b><div class="item-detalle">Sesiones prácticas de uso de la tienda y del panel, con material de apoyo y grabación disponible.</div></td><td class="centro">2 sesiones</td><td class="num">$50.000</td></tr>
+<tr><td class="centro">4</td><td><span class="item-cat">Servicio técnico</span><br><b>Servicio técnico y soporte — 3 meses</b><div class="item-detalle">Corrección de errores, asistencia ante fallos y orientación de uso durante 3 meses desde la publicación.</div></td><td class="centro">1</td><td class="num"><span class="chip-incluido">INCLUIDO</span></td></tr>
+<tr><td colspan="3" style="text-align:right;background:#EAF1F6;"><b>TOTAL</b></td><td class="num" style="background:#EAF1F6;"><b>$450.000 CLP</b></td></tr>
+    </table>
+    <table class="inversion" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>
+          <div class="inv-etq">Inversión total</div>
+          <div class="inv-proyecto">Tienda Online con Panel de Administración</div>
+        </td>
+        <td class="inv-total"><small>Total CLP</small>$450.000</td>
+      </tr>
+    </table>
+    <table class="soporte-chip" cellpadding="0" cellspacing="0">
+      <tr>
+        <td><b>Servicio técnico incluido:</b> 3 meses de soporte y actualizaciones correctivas, sin costo adicional.</td>
+      </tr>
+    </table>
+    <div class="nota"><p><p>El servicio técnico de seis meses está incluido en el valor del desarrollo: no tiene costo adicional.</p></p></div>
+  </section>
+
+  <!-- ══ 8 · DESGLOSE JUSTIFICADO ══ -->
+  <section>
+    <h2 class="sec"><span class="num">8</span>Desglose y justificación de la inversión</h2>
+    <table class="desglose"><tr><td class="des-num"></td><td><div class="des-caja"><span class="des-monto">$280.000 CLP</span><div class="des-titulo">1. Diseño y desarrollo de tienda online</div><div class="des-detalle">Portada, catálogo, fichas de producto, carrito de compras y registro de pedidos con notificación automática.</div><div class="des-just"><b>Justificación:</b> Es el componente principal de la solución: todo el canal de ventas online visible para los clientes, construido a partir de la identidad de la empresa.</div></div></td></tr></table>
+<table class="desglose"><tr><td class="des-num"></td><td><div class="des-caja"><span class="des-monto">$120.000 CLP</span><div class="des-titulo">2. Panel de administración</div><div class="des-detalle">Gestión de productos, precios, stock, pedidos y clientes, con accesos restringidos por usuario.</div><div class="des-just"><b>Justificación:</b> Permite al equipo administrar la tienda sin depender del desarrollador para cambios diarios, reduciendo costos futuros de mantención.</div></div></td></tr></table>
+<table class="desglose"><tr><td class="des-num"></td><td><div class="des-caja"><span class="des-monto">$50.000 CLP</span><div class="des-titulo">3. Capacitación del equipo (2 sesiones)</div><div class="des-detalle">Sesiones prácticas de uso de la tienda y del panel, con material de apoyo y grabación disponible.</div><div class="des-just"><b>Justificación:</b> Asegura que el equipo quede autónomo en la operación diaria, protegiendo la inversión realizada.</div></div></td></tr></table>
+<table class="desglose"><tr><td class="des-num"></td><td><div class="des-caja"><span class="des-monto" style="color:#0B5A63;">INCLUIDO</span><div class="des-titulo">4. Servicio técnico y soporte — 3 meses</div><div class="des-detalle">Corrección de errores, asistencia ante fallos y orientación de uso durante 3 meses desde la publicación.</div><div class="des-just"><b>Justificación:</b> Incluido en la propuesta como beneficio: acompaña el arranque de la tienda sin costo adicional.</div></div></td></tr></table>
+  </section>
+
+  <!-- ══ 9 · GARANTÍAS ══ -->
+  <section>
+    <h2 class="sec"><span class="num">9</span>Garantías y compromisos</h2>
+    <ul class="lista">
+<li><strong>Confidencialidad:</strong> la información entregada por el cliente se trata de manera reservada y se utiliza exclusivamente para el desarrollo del proyecto.</li>
+<li><strong>Respaldo de los datos:</strong> se mantiene un guardado de seguridad independiente de la información trabajada durante todo el desarrollo, ajeno al sistema mismo, como protección ante cualquier imprevisto.</li>
+<li><strong>Corrección de errores:</strong> los errores del sistema se corrigen sin costo durante todo el período de servicio técnico.</li>
+<li><strong>Continuidad del proyecto:</strong> el código fuente permanece versionado en Git, lo que permite recuperar y continuar el trabajo ante cualquier eventualidad.</li>
+<li><strong>Entrega verificada:</strong> el sistema se entrega probado funcionalmente según el alcance descrito en este documento.</li>
+<li><strong>Transparencia de valores:</strong> cada componente de la inversión está discriminado y justificado en la sección de desglose.</li>
+<li>Respaldo permanente en Git: el código fuente se mantiene versionado en un repositorio privado (GitHub) con historial completo de cambios; el cliente podrá solicitar una copia del repositorio al término del proyecto.</li>
+<li>Sin cargos ocultos: ningún trabajo fuera del alcance descrito se inicia ni se cobra sin una cotización previa aceptada por el cliente.</li>
+</ul>
+  </section>
+
+  <!-- ══ 10 · FORMA DE PAGO ══ -->
+  <section>
+    <h2 class="sec"><span class="num">10</span>Forma de pago</h2>
+    <p>Condiciones de pago acordadas:</p>
+<ul class="lista">
+<li>Pago inicial (50%): $225.000 al aceptar la cotización.</li>
+<li>Pago final (50%): $225.000 contra entrega publicada de la tienda.</li>
+<li>Medio de pago: transferencia bancaria.</li>
+</ul>
+  </section>
+
+  <!-- ══ 11 · VIGENCIA Y VERIFICACIÓN ══ -->
+  <section>
+    <h2 class="sec"><span class="num">11</span>Vigencia y verificación del documento</h2>
+    <p><p>Esta cotización es válida por 15 días corridos desde su fecha de emisión (hasta el 05-09-2026).</p></p>
+    <table class="verif">
+      <tr>
+        <td class="verif-txt">
+          <p>Escanee el código QR para verificar la autenticidad de este documento. El código contiene el número de cotización, su fecha de emisión, su fecha de vencimiento y un código de verificación (hash) asociado a los datos del documento. La validez del documento coincide con su vigencia: hasta el 05-09-2026.</p>
+          <table class="control">
+            <tr>
+              <th>Cotización</th><th>Versión</th><th>Emisión</th><th>Vence</th><th>Cód. verificación</th>
+            </tr>
+            <tr>
+              <td>COT-DEMO-2026-001</td><td>2</td><td>21-08-2026</td><td>05-09-2026</td><td>B863997D95</td>
+            </tr>
+          </table>
+        </td>
+        <td class="verif-qr">
+          <img class="qr-img" src="data:image/png;base64,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" alt="QR de verificación del documento">
+          <div class="qr-pie">Verificación de autenticidad</div>
+        </td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- ══ 12 · EXCLUSIONES ══ -->
+  <section>
+    <h2 class="sec"><span class="num">12</span>Exclusiones y consideraciones</h2>
+    <ul class="lista">
+<li>Esta cotización considera exclusivamente el alcance descrito en el presente documento.</li>
+<li>Los cambios que impliquen nuevas funcionalidades, módulos adicionales, integraciones no contempladas o modificaciones sustanciales podrán requerir una nueva cotización.</li>
+<li>La disponibilidad de servicios externos, cuentas, permisos o infraestructura de terceros no depende exclusivamente del desarrollador.</li>
+</ul>
+  </section>
+
+  <!-- ══ 13 · ACEPTACIÓN ══ -->
+  <section class="salta">
+    <h2 class="sec"><span class="num">13</span>Aceptación de la cotización</h2>
+    <p><p>La aceptación de esta cotización implica conformidad con el alcance, los entregables, las garantías y el valor indicados en este documento.</p></p>
+    <table class="aceptacion-datos">
+      <tr><td class="k">Nombre</td><td>María Pérez Soto</td></tr>
+      <tr><td class="k">Cargo</td><td>Gerenta General</td></tr>
+      <tr><td class="k">Institución</td><td>Empresa de Ejemplo SpA</td></tr>
+      <tr><td class="k">Fecha</td><td>&nbsp;</td></tr>
+    </table>
+    <table class="firmas">
+      <tr>
+        <td><div class="linea-firma"><b>Firma del cliente</b><br>Nombre y aclaración</div></td>
+        <td class="firma-sep"></td>
+        <td><div class="linea-firma"><b>Patricio Varela C.</b><br>Técnico en Programación Nivel Medio</div></td>
+      </tr>
+    </table>
+  </section>
+
+  <div class="pie">Documento generado electrónicamente por Patricio Varela C. · <a href="mailto:patriciovarelacontreras@gmail.com">patriciovarelacontreras@gmail.com</a> · <a href="https://github.com/2674321">GitHub</a> · COT-DEMO-2026-001 · v2 · Verif. B863997D95</div>
+</div>
+</body>
+</html>

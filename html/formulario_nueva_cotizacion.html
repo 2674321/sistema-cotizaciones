@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Segoe UI", Roboto, Arial, sans-serif; font-size: 13px; color: #1F2937; background: #F7FAFC; }
+  .cont { padding: 16px 18px 18px 18px; }
+  h2 { color: #0B3954; font-size: 16px; margin-bottom: 2px; }
+  .sub { color: #5B6B7C; font-size: 11.5px; margin-bottom: 14px; }
+  label { display: block; font-weight: 700; color: #33475C; font-size: 11px; text-transform: uppercase; letter-spacing: .6px; margin: 10px 0 3px 0; }
+  input, select, textarea {
+    width: 100%; padding: 7px 9px; border: 1px solid #C9D6E0; border-radius: 6px;
+    font-size: 13px; background: #FFF; font-family: inherit;
+  }
+  textarea { resize: vertical; min-height: 52px; }
+  .fila { display: flex; gap: 10px; }
+  .fila > div { flex: 1; }
+  .ayuda { color: #8296A8; font-size: 10.5px; margin-top: 2px; }
+  .acciones { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
+  button {
+    padding: 9px 16px; border-radius: 6px; border: none; font-size: 13px;
+    font-weight: 700; cursor: pointer; font-family: inherit;
+  }
+  .btn-primario { background: #087E8B; color: #FFF; }
+  .btn-primario:hover { background: #0B3954; }
+  .btn-cancelar { background: transparent; color: #5B6B7C; border: 1px solid #C9D6E0; }
+  .estado { margin-top: 12px; font-size: 12.5px; display: none; padding: 9px 12px; border-radius: 6px; }
+  .ok { background: #E7F5EE; color: #14663D; border: 1px solid #BFE5D0; }
+  .error { background: #FDECEC; color: #99231F; border: 1px solid #F3C2C0; }
+  code { background: #EDF2F7; padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="cont">
+  <h2>Nueva cotización</h2>
+  <div class="sub">El sistema asigna el código automáticamente. Los textos (resumen, alcance…) se completan después en la hoja COTIZACIONES.</div>
+
+  <form id="formulario">
+    <label for="clienteSel">Cliente existente</label>
+    <select id="clienteSel"><option value="">— Sin registrar aún —</option></select>
+
+    <label for="clienteNuevo">…o nuevo cliente / institución</label>
+    <input type="text" id="clienteNuevo" placeholder="Nombre de la institución (opcional)">
+    <div class="ayuda">Si eliges un cliente de la lista, este campo se ignora.</div>
+
+    <label for="titulo">Título del proyecto *</label>
+    <input type="text" id="titulo" required placeholder="Ej: Sistema ECICEP Unificado">
+
+    <div class="fila">
+      <div>
+        <label for="clave">Clave para el código</label>
+        <input type="text" id="clave" placeholder="ECICEP" maxlength="12">
+        <div class="ayuda">Vacío = se deduce del título. Código: COT-&lt;clave&gt;-&lt;año&gt;-&lt;nº&gt;</div>
+      </div>
+      <div>
+        <label for="valor">Valor total *</label>
+        <input type="number" id="valor" required min="1" step="1000" placeholder="120000">
+      </div>
+    </div>
+
+    <div class="fila">
+      <div>
+        <label for="moneda">Moneda</label>
+        <input type="text" id="moneda" value="CLP">
+      </div>
+      <div>
+        <label for="meses">Meses de servicio técnico</label>
+        <input type="number" id="meses" value="0" min="0" max="24">
+      </div>
+      <div>
+        <label for="vigencia">Vigencia (días)</label>
+        <input type="number" id="vigencia" value="15" min="1">
+      </div>
+    </div>
+
+    <label for="detalleItem">Detalle del ítem principal (opcional)</label>
+    <textarea id="detalleItem" placeholder="Breve descripción de lo que incluye el valor cotizado"></textarea>
+
+    <label for="condiciones">Condiciones de pago (vacío = campos por acordar)</label>
+    <textarea id="condiciones" placeholder="- 50% al aceptar, 50% contra entrega&#10;- Transferencia bancaria…"></textarea>
+
+    <label for="observaciones">Observaciones internas (no aparecen en el PDF)</label>
+    <textarea id="observaciones"></textarea>
+
+    <div class="acciones">
+      <button type="button" class="btn-cancelar" onclick="google.script.host.close()">Cancelar</button>
+      <button type="submit" class="btn-primario" id="btnCrear">Crear cotización</button>
+    </div>
+  </form>
+
+  <div id="estadoOk" class="estado ok"></div>
+  <div id="estadoError" class="estado error"></div>
+</div>
+
+<script>
+  var vigenciaDefault = 15;
+
+  // Cargar clientes y valores por defecto
+  google.script.run
+    .withSuccessHandler(function (datos) {
+      var sel = document.getElementById('clienteSel');
+      datos.clientes.forEach(function (c) {
+        var op = document.createElement('option');
+        op.value = c.id;
+        op.textContent = c.nombre + ' (' + c.id + ')';
+        sel.appendChild(op);
+      });
+      document.getElementById('moneda').value = datos.monedaDefault || 'CLP';
+      vigenciaDefault = datos.vigenciaDefault || 15;
+      document.getElementById('vigencia').value = vigenciaDefault;
+    })
+    .withFailureHandler(function (err) { mostrarError(err); })
+    .datosParaFormulario();
+
+  // Sugerir clave a partir del título
+  document.getElementById('titulo').addEventListener('blur', function () {
+    var clave = document.getElementById('clave');
+    if (!clave.value.trim() && this.value.trim()) {
+      var palabras = this.value.trim().split(/\s+/).filter(function (p) {
+        return p.length >= 4 && !/^(del|los|las|para|sistema|unificado)$/i.test(p);
+      });
+      if (palabras.length) clave.value = palabras[0].toUpperCase().slice(0, 12);
+    }
+  });
+
+  document.getElementById('formulario').addEventListener('submit', function (e) {
+    e.preventDefault();
+    document.getElementById('btnCrear').disabled = true;
+    ocultarEstados();
+    var datos = {
+      clienteId: document.getElementById('clienteSel').value,
+      clienteNuevo: document.getElementById('clienteNuevo').value.trim(),
+      tituloProyecto: document.getElementById('titulo').value.trim(),
+      claveCorta: document.getElementById('clave').value.trim(),
+      valor: Number(document.getElementById('valor').value),
+      moneda: document.getElementById('moneda').value.trim(),
+      mesesSoporte: Number(document.getElementById('meses').value) || 0,
+      vigenciaDias: Number(document.getElementById('vigencia').value) || vigenciaDefault,
+      detalleItem: document.getElementById('detalleItem').value.trim(),
+      condicionesPagoMd: document.getElementById('condiciones').value.trim(),
+      observaciones: document.getElementById('observaciones').value.trim()
+    };
+    google.script.run
+      .withSuccessHandler(function (codigo) {
+        var ok = document.getElementById('estadoOk');
+        ok.innerHTML = '✅ Cotización <code>' + codigo + '</code> creada.<br>Ya puedes completar sus textos en la hoja COTIZACIONES y generar el PDF.';
+        ok.style.display = 'block';
+        setTimeout(function () { google.script.host.close(); }, 2600);
+      })
+      .withFailureHandler(mostrarError)
+      .crearCotizacionDesdeFormulario(datos);
+  });
+
+  function mostrarError(err) {
+    document.getElementById('btnCrear').disabled = false;
+    var el = document.getElementById('estadoError');
+    el.textContent = '⚠️ ' + (err && err.message ? err.message : err);
+    el.style.display = 'block';
+  }
+  function ocultarEstados() {
+    document.getElementById('estadoOk').style.display = 'none';
+    document.getElementById('estadoError').style.display = 'none';
+  }
+</script>
+</body>
+</html>

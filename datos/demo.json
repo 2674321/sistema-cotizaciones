@@ -1,0 +1,78 @@
+{
+  "_nota": "Cotización de PRUEBA 100% ficticia (empresa y datos inventados). Sirve para capturas de pantalla y pruebas de la plantilla v2. No mezclar con cotizaciones reales.",
+  "cliente": {
+    "id_cliente": "CL-DEMO",
+    "nombre_institucion": "Empresa de Ejemplo SpA",
+    "responsable": "María Pérez Soto",
+    "cargo": "Gerenta General",
+    "correo": "contacto@ejemplo.cl",
+    "telefono": "+56 9 1234 5678",
+    "observaciones": "CLIENTE FICTICIO — solo para pruebas del sistema y capturas de pantalla.",
+    "fecha_alta": "21-08-2026"
+  },
+  "cotizacion": {
+    "codigo": "COT-DEMO-2026-001",
+    "clave_corta": "DEMO",
+    "fecha": "21-08-2026",
+    "version": "2",
+    "id_cliente": "CL-DEMO",
+    "titulo_proyecto": "Tienda Online con Panel de Administración",
+    "estado": "borrador",
+    "moneda": "CLP",
+    "total": 450000,
+    "servicio_tecnico_meses": 3,
+    "resumen_ejecutivo_md": "La empresa vende sus productos de forma presencial y por redes sociales, sin un canal propio de ventas online. Los pedidos se coordinan por mensajes, lo que genera demoras en las respuestas, errores en el registro y falta de control sobre el inventario.\nSe propone el desarrollo de una tienda online con panel de administración a medida: catálogo de productos con fotografías y precios, carrito de compras, registro de pedidos y un panel interno para administrar productos, stock, pedidos y clientes desde un solo lugar.\nCon esta solución, la empresa centraliza sus ventas online, reduce los errores de coordinación y gana control total sobre su operación comercial.",
+    "alcance_md": "# Diseño e identidad\nAdaptación de la identidad visual de la empresa a la tienda online: portada, catálogo y fichas de producto con fotografías y descripciones.\n# Tienda online\nCatálogo de productos, carrito de compras, registro de pedidos y notificación automática de cada venta al correo de la empresa.\n# Panel de administración\nGestión interna de productos, precios, stock, pedidos y clientes, con acceso restringido por usuario y contraseña.\n# Capacitación\nDos sesiones de capacitación para el equipo en el uso de la tienda y del panel de administración.\n# Puesta en marcha\nPublicación de la tienda, configuración del dominio y acompañamiento durante las primeras ventas.",
+    "entregables_md": "- Tienda online publicada y funcional.\n- Panel de administración con accesos configurados.\n- Catálogo inicial cargado (hasta 50 productos).\n- Notificaciones automáticas de pedidos.\n- Dos sesiones de capacitación grabadas.\n- Documentación de uso básica.\n- Servicio técnico de 3 meses incluido.",
+    "git_md": "",
+    "soporte_incluido_md": "",
+    "soporte_no_incluido_md": "",
+    "garantias_md": "",
+    "condiciones_pago_md": "Condiciones de pago acordadas:\n- Pago inicial (50%): $225.000 al aceptar la cotización.\n- Pago final (50%): $225.000 contra entrega publicada de la tienda.\n- Medio de pago: transferencia bancaria.",
+    "vigencia_dias": 15,
+    "exclusiones_md": "",
+    "observaciones": "COTIZACIÓN DE PRUEBA — datos ficticios generados para capturas de pantalla y demostración del sistema.",
+    "items": [
+      {
+        "orden": 1,
+        "categoria": "Desarrollo web",
+        "descripcion": "Diseño y desarrollo de tienda online",
+        "detalle": "Portada, catálogo, fichas de producto, carrito de compras y registro de pedidos con notificación automática.",
+        "justificacion": "Es el componente principal de la solución: todo el canal de ventas online visible para los clientes, construido a partir de la identidad de la empresa.",
+        "cantidad": 1,
+        "unidad": "servicio",
+        "precio_unitario": 280000
+      },
+      {
+        "orden": 2,
+        "categoria": "Desarrollo web",
+        "descripcion": "Panel de administración",
+        "detalle": "Gestión de productos, precios, stock, pedidos y clientes, con accesos restringidos por usuario.",
+        "justificacion": "Permite al equipo administrar la tienda sin depender del desarrollador para cambios diarios, reduciendo costos futuros de mantención.",
+        "cantidad": 1,
+        "unidad": "servicio",
+        "precio_unitario": 120000
+      },
+      {
+        "orden": 3,
+        "categoria": "Capacitación",
+        "descripcion": "Capacitación del equipo (2 sesiones)",
+        "detalle": "Sesiones prácticas de uso de la tienda y del panel, con material de apoyo y grabación disponible.",
+        "justificacion": "Asegura que el equipo quede autónomo en la operación diaria, protegiendo la inversión realizada.",
+        "cantidad": 2,
+        "unidad": "sesiones",
+        "precio_unitario": 25000
+      },
+      {
+        "orden": 4,
+        "categoria": "Servicio técnico",
+        "descripcion": "Servicio técnico y soporte — 3 meses",
+        "detalle": "Corrección de errores, asistencia ante fallos y orientación de uso durante 3 meses desde la publicación.",
+        "justificacion": "Incluido en la propuesta como beneficio: acompaña el arranque de la tienda sin costo adicional.",
+        "cantidad": 1,
+        "unidad": "incluido",
+        "precio_unitario": 0
+      }
+    ]
+  }
+}

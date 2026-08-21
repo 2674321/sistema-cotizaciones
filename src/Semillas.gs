@@ -108,6 +108,7 @@ function semillasPlantilla_() {
  */
 function cargarCotizacionECICEP() {
   crearEstructuraSinAlert_();
+  var hoy = new Date();
   var hss = SpreadsheetApp.getActiveSpreadsheet();
 
   // ── Cliente (datos de la cliente: Camila Paz Aguilar) ──
@@ -133,7 +134,6 @@ function cargarCotizacionECICEP() {
     return;
   }
 
-  var hoy = new Date();
   var fila = [
     codigo,
     fechaCorta_(hoy),            // fecha dd-MM-yyyy (texto)

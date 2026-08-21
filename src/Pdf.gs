@@ -7,26 +7,90 @@
 
 /**
  * Genera el PDF de una cotización y lo registra en la hoja.
+ * Conversión:
+ *  1. Si CONFIG.pdf_api_key está definida → servicio con Chrome real
+ *     (Api2Pdf): resultado 100% fiel al diseño del HTML.
+ *  2. Si no (o si la API falla) → conversor nativo de Google.
+ * En ambos casos guarda también el .html en Drive para poder imprimirlo
+ * desde el navegador (Ctrl+P) con fidelidad total cuando se prefiera.
  * @param {string} codigo Código de la cotización, p.ej. COT-ECICEP-2026-001
- * @return {Object} { url, nombre }
+ * @return {Object} { url, nombre, url_html, motor }
  */
 function generarPdf(codigo) {
   var cot = getCotizacion_(codigo);
   if (!cot) throw new Error('No existe la cotización ' + codigo);
 
+  var config = getConfig_();
   var html = renderizarHtml_(cot);
   var nombreArchivo = cot.codigo + '_' + slug_(cot.titulo_proyecto);
-
-  var blob = Utilities.newBlob(html, 'text/html', nombreArchivo + '.html')
-    .getAs('application/pdf')
-    .setName(nombreArchivo + '.pdf');
-
   var carpeta = resolverCarpetaSalida_();
+
+  // ── HTML editable/imprimible (siempre se guarda) ──
+  var blobHtml = Utilities.newBlob(html, 'text/html', nombreArchivo + '.html');
+  var archivoHtml = carpeta.createFile(blobHtml);
+
+  // ── PDF ──
+  var blob, motor;
+  if (config.pdf_api_key) {
+    try {
+      blob = pdfViaChromeApi_(html, nombreArchivo, config.pdf_api_key);
+      motor = 'chrome-api';
+    } catch (e) {
+      log_('PDF_API_FALLO', cot.codigo, String(e.message || e));
+    }
+  }
+  if (!blob) {
+    blob = Utilities.newBlob(html, 'text/html', nombreArchivo + '.html')
+      .getAs('application/pdf')
+      .setName(nombreArchivo + '.pdf');
+    motor = 'nativo';
+  }
+
   var archivo = carpeta.createFile(blob);
   registrarPdf_(cot.codigo, archivo.getUrl());
-  log_('PDF_GENERADO', cot.codigo, archivo.getUrl());
+  log_('PDF_GENERADO', cot.codigo, motor + ' · ' + archivo.getUrl());
 
-  return { url: archivo.getUrl(), nombre: nombreArchivo + '.pdf' };
+  return {
+    url: archivo.getUrl(),
+    nombre: nombreArchivo + '.pdf',
+    url_html: archivoHtml.getUrl(),
+    motor: motor
+  };
+}
+
+/**
+ * Convierte HTML a PDF con motor Chrome real vía Api2Pdf.
+ * El contenido del documento viaja a sus servidores para el renderizado.
+ * @return {GoogleAppsScript.Base.Blob} Blob PDF listo para guardar.
+ */
+function pdfViaChromeApi_(html, nombreArchivo, apiKey) {
+  var opciones = {
+    method: 'post',
+    contentType: 'application/json',
+    headers: { Authorization: apiKey },
+    muteHttpExceptions: true,
+    payload: JSON.stringify({
+      html: html,
+      fileName: nombreArchivo + '.pdf',
+      inlinePdf: false,
+      options: {
+        format: 'A4',
+        printBackground: true,
+        marginTop: '0mm', marginBottom: '0mm',
+        marginLeft: '0mm', marginRight: '0mm'
+      }
+    })
+  };
+  var resp = UrlFetchApp.fetch('https://v2.api2pdf.com/chrome/html', opciones);
+  if (resp.getResponseCode() !== 200) {
+    throw new Error('Api2Pdf respondió ' + resp.getResponseCode() + ': ' + resp.getContentText().slice(0, 140));
+  }
+  var datos = JSON.parse(resp.getContentText());
+  if (!datos.FileUrl) throw new Error(datos.Message || 'Respuesta sin FileUrl');
+
+  var pdf = UrlFetchApp.fetch(datos.FileUrl, { muteHttpExceptions: true });
+  if (pdf.getResponseCode() !== 200) throw new Error('No se pudo descargar el PDF generado');
+  return pdf.getBlob().setName(nombreArchivo + '.pdf');
 }
 
 /** Carpeta de salida según CONFIG (id) o subcarpeta "Cotizaciones" en raíz. */
@@ -60,11 +124,11 @@ function menuGenerarPdf() {
   }
   try {
     var r = generarPdf(codigo);
-    var abrir = ui.alert(
-      '✅ PDF generado',
-      r.nombre + '\n\n¿Abrir el documento ahora?',
-      ui.ButtonSet.YES_NO
-    );
+    var detalle = r.nombre + '\n\nMotor: ' + (r.motor === 'chrome-api'
+      ? 'Chrome real (fiel al diseño)'
+      : 'nativo de Google') + '\nHTML en Drive: ' + r.url_html
+      + '\n\n¿Abrir el documento ahora?';
+    var abrir = ui.alert('✅ PDF generado', detalle, ui.ButtonSet.YES_NO);
     if (abrir === ui.Button.YES) {
       HtmlService.createHtmlOutput(
         '<script>window.top.location.href = "' + r.url + '";</script>'

@@ -63,6 +63,7 @@ function getConfig_() {
     pie_documento: valores.pie_documento || 'Documento generado electrónicamente — {CODIGO} · v{VERSION}',
     repo_modo: valores.repo_modo || 'privado',
     carpeta_salida_id: valores.carpeta_salida_id || '',
+    pdf_api_key: valores.pdf_api_key || '',
     plantilla_version: Number(valores.plantilla_version) || 2,
     qr_activo: String(valores.qr_activo || 'true').toLowerCase() !== 'false',
     qr_base_url: valores.qr_base_url || '',

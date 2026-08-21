@@ -27,6 +27,7 @@ function semillasConfig_() {
     pie_documento:           { valor: 'Documento generado electrónicamente por Patricio Varela C. — {CODIGO} · v{VERSION}', descripcion: '(v1) Pie simple. En plantilla v2 el pie se construye con links + código de verificación.' },
     repo_modo:               { valor: 'privado', descripcion: 'Modo del repositorio Git: privado | compartido | publico.' },
     carpeta_salida_id:       { valor: '', descripcion: 'ID de carpeta de Drive donde se guardan los PDF. Vacío = subcarpeta "Cotizaciones" en la raíz.' },
+    pdf_api_key:             { valor: '', descripcion: 'API key de Api2Pdf (v2.api2pdf.com): convierte con Chrome real, 100% fiel al diseño. Vacío = conversor nativo de Google (menor fidelidad). El documento viaja a sus servidores.' },
     plantilla_version:       { valor: 2, descripcion: 'Versión de la plantilla HTML: 1 (clásica) o 2 (links + QR + desglose justificado).' },
     qr_activo:               { valor: true, descripcion: 'Generar QR de verificación en la sección Vigencia (true/false).' },
     qr_base_url:             { valor: '', descripcion: 'URL pública de verificación para el QR, ej: https://misitio.cl/verificar. Vacío = QR con texto.' },

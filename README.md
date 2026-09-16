@@ -18,6 +18,16 @@ datos/*.json → scripts/generar_preview.py → HTML + PDF (WeasyPrint)
 
 Pensado para cotizar durante años: desarrollo de software, automatizaciones, sistemas sobre Google Sheets, páginas web, soporte técnico y servicios personalizados.
 
+## Capturas
+
+Preview demo con datos ficticios (`--demo`):
+
+![Cotización demo 1](docs/screenshots/cotizaciones-demo-01.png)
+![Cotización demo 2](docs/screenshots/cotizaciones-demo-02.png)
+
+![Cotización demo 3](docs/screenshots/cotizaciones-demo-03.png)
+![Cotización demo 4](docs/screenshots/cotizaciones-demo-04.png)
+
 ## Características
 
 - **Plantilla visual v2** (`html/plantilla_cotizacion_v2.html`):

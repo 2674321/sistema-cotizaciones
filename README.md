@@ -1,5 +1,7 @@
 # Sistema de Cotizaciones
 
+**Autor:** [Patricio Varela C.](https://github.com/2674321) · **ORCID:** [0009-0002-1087-9445](https://orcid.org/0009-0002-1087-9445) · **Licencia:** [MIT](LICENSE) · **Citación:** [CITATION.cff](CITATION.cff)
+
 Generador reutilizable de **cotizaciones de servicios tecnológicos en PDF** a partir de datos estructurados.
 
 **Flujo actual:** JSON → plantilla HTML → **PDF con WeasyPrint**, con QR de verificación,

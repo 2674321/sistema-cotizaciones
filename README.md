@@ -3,6 +3,9 @@
 <p align="center"><img src="docs/branding/app-icon.svg" width="150" alt="Icono minimalista del Sistema de Cotizaciones"></p>
 
 
+
+<p align="center"><img src="docs/branding/hero-banner.svg" width="100%" alt="Sistema de Cotizaciones"></p>
+
 **Autor:** [Patricio Varela C.](https://github.com/2674321) · **ORCID:** [0009-0002-1087-9445](https://orcid.org/0009-0002-1087-9445) · **Licencia:** [MIT](LICENSE) · **Citación:** [CITATION.cff](CITATION.cff)
 
 Generador reutilizable de **cotizaciones de servicios tecnológicos en PDF** a partir de datos estructurados.

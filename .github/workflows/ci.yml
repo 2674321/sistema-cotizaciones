@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '20'
+      - name: Python syntax
+        run: python -m compileall -q scripts
+      - name: Generate synthetic demo HTML
+        run: python scripts/generar_preview.py --demo --no-pdf
+      - name: Verify generated demo
+        run: |
+          test -s preview/COT-DEMO-2026-001.html
+          grep -q 'Empresa de Ejemplo SpA' preview/COT-DEMO-2026-001.html
+      - name: Validate npm utility package
+        working-directory: paquete-npm
+        run: |
+          node --check index.js
+          npm pack --dry-run

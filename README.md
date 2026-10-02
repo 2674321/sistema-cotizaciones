@@ -1,8 +1,9 @@
-# Sistema Personal de Generación de Cotizaciones
+# Sistema de Cotizaciones
 
-Sistema profesional y reutilizable para crear **cotizaciones de servicios tecnológicos** en formato PDF, listo para enviar a clientes.
+Generador reutilizable de **cotizaciones de servicios tecnológicos en PDF** a partir de datos estructurados.
 
-**Flujo oficial (desde 2026-08):** datos en JSON → plantilla HTML → **PDF con WeasyPrint** (fidelidad total al diseño, hash de verificación + QR, sin servicios de pago ni terceros).
+**Flujo actual:** JSON → plantilla HTML → **PDF con WeasyPrint**, con QR de verificación,
+hash de integridad y generación local sin servicios externos de pago.
 
 > El montaje sobre Google Sheets + Apps Script quedó **deprecado**: ver [`deprecated/apps-script/`](deprecated/apps-script/).
 

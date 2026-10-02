@@ -1,6 +1,7 @@
 # ── Documento de referencia (NO versionar: contiene datos de clientes) ──
 *.docx
 *.doc
+/COT-*.pdf
 
 # ── Credenciales y configuración local de despliegue ──
 .clasp.json
@@ -9,6 +10,7 @@ credentials*.json
 token*.json
 client_secret*.json
 .env
+.env.*
 
 # ── Datos privados en uso (clientes reales, sal real) ──
 datos/privado/

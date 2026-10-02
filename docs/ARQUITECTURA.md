@@ -1,5 +1,10 @@
 # Arquitectura del sistema
 
+> **Estado (2026-08):** el motor Apps Script quedó **deprecado**
+> (`deprecated/apps-script/`). El sistema oficial es el generador local
+> `scripts/generar_preview.py` (WeasyPrint). Las referencias a hojas de
+> cálculo y menús de Google describen el flujo histórico.
+
 ## Principios de diseño
 
 1. **Separación estricta de conceptos** — A diferencia del informe histórico (que mezclaba diagnóstico, compras, gastos, mano de obra y entrega), cada concepto vive en su propia hoja y sección: cotización ≠ cliente ≠ ítems ≠ registro.

@@ -1,3 +1,10 @@
+# ⚠️ DEPRECATED — Google Apps Script
+
+> **Este flujo está deprecado.** El sistema oficial es ahora el **generador local**
+> (`scripts/generar_preview.py`), que convierte el HTML a PDF con WeasyPrint:
+> fidelidad total al diseño, hash de verificación y QR, sin servicios de pago.
+> Esta guía se conserva por si algún día se retoma el montaje en Google Sheets.
+
 # Guía de instalación — Google Apps Script
 
 ## Opción A · Montaje manual (recomendada para empezar)

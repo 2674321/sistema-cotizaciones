@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="220" viewBox="0 0 880 220" font-family="Inter,Segoe UI,Arial,sans-serif" role="img" aria-label="Sistema de Cotizaciones, logotipo horizontal blanco">
+  <title>Lockup horizontal blanco — Sistema de Cotizaciones</title>
+  <g fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="26" y="26" width="168" height="168" rx="44"/>
+    <path d="M78 78h50l34 34v82H78z"/>
+    <path d="M128 78v34h34"/>
+    <path d="M98 132l18 18 38-44"/>
+  </g>
+  <text x="248" y="112" font-size="52" font-weight="700" fill="#FFFFFF">Sistema de</text>
+  <text x="250" y="172" font-size="52" font-weight="700" fill="#FFFFFF">Cotizaciones</text>
+  <text x="250" y="204" font-size="20" fill="#FFFFFF" opacity="0.7" letter-spacing="3">PDF · QR · VERIFICACIÓN</text>
+</svg>

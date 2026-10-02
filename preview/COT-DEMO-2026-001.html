@@ -10,17 +10,22 @@
      de documento · garantías · desglose justificado de valores
      Paleta: primario #0B3954 · acento #087E8B · texto #1F2937
      ══════════════════════════════════════════════════════════ */
-  @page {
-    size: A4;
-    margin: 16mm 14mm 18mm 14mm;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
-    font-size: 10pt;
-    line-height: 1.55;
-    color: #1F2937;
-  }
+   @page {
+     size: A4;
+     margin: 16mm 14mm 18mm 14mm;
+   }
+   * { margin: 0; padding: 0; box-sizing: border-box; }
+   /* Márgenes duales: motores que ignoran @page (y no soportan var()) usan
+      el margen del body; los que sí soportan @page toman var() = 0 y evitan
+      el doble margen. */
+   body {
+     margin: 13mm 12mm;
+     margin: var(--margen-pagina, 0mm);
+     font-family: "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+     font-size: 10pt;
+     line-height: 1.55;
+     color: #1F2937;
+   }
   .doc { max-width: 182mm; }
   a { color: #087E8B; text-decoration: none; border-bottom: .5px solid #9CCFD4; }
 
@@ -108,7 +113,10 @@
   }
 
   /* ── Bloque de inversión destacado ── */
+  /* Fondo: color sólido de respaldo para motores sin degradado (Apps Script);
+     WeasyPrint pinta el degradado completo. */
   table.inversion { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 3mm;
+    background: #14608A;
     background: linear-gradient(105deg, #0B3954 0%, #14608A 62%, #087E8B 100%); border-radius: 2.5mm; }
   table.inversion td { padding: 6mm 7mm; vertical-align: middle; }
   .inv-etq { color: #BFD7E4; font-size: 8.6pt; text-transform: uppercase; letter-spacing: 1.8px; font-weight: 700; }
